@@ -18,6 +18,9 @@ public class User {
     @Column(nullable=false)
     private String username;
 
+    @Column(nullable=false, unique=true)
+    private String email;
+
     @Column(nullable=false)
     private String password;
 
@@ -27,6 +30,6 @@ public class User {
         joinColumns=@JoinColumn(name="user_id"),
         inverseJoinColumns=@JoinColumn(name="store_id")
     )
-    private Set<Stores> store_ids;
+    private Set<Store> stores;
     
 }
