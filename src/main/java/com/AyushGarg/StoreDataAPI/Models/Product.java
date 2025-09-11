@@ -25,6 +25,8 @@ public class Product {
     private List<String> tags;
 
     private Date createdAt;
+    
+    private Long storeId;
 
 
 }

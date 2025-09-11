@@ -1,5 +1,6 @@
 package com.AyushGarg.StoreDataAPI.Models;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 import jakarta.persistence.Entity;
@@ -22,8 +23,8 @@ public class Customer {
     private String email;
     private boolean verifiedEmail;
 
-    private String ordersCount;
-    private String totalSpent;
+    private int ordersCount;
+    private BigDecimal totalSpent;
     
     private Long lastOrderId;
     private String lastOrderNumber;
@@ -31,5 +32,6 @@ public class Customer {
     //although in customers it has # at start
     private String country;
 
+    private Long storeId;
     
 }
