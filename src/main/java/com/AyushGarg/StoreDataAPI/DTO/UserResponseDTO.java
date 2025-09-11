@@ -2,6 +2,9 @@ package com.AyushGarg.StoreDataAPI.DTO;
 
 import com.AyushGarg.StoreDataAPI.Models.User;
 
+import lombok.Data;
+
+@Data
 public class UserResponseDTO {
     private Long id;
     private String name;
@@ -13,14 +16,4 @@ public class UserResponseDTO {
         this.email = user.getEmail();
     }
 
-    // getters
-    public Long getId() {
-        return id;
-    }
-    public String getName() {
-        return name;
-    }
-    public String getEmail() {
-        return email;
-    }
 }

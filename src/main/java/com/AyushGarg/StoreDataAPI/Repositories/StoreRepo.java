@@ -8,6 +8,6 @@ import com.AyushGarg.StoreDataAPI.Models.Store;
 @Repository
 public interface StoreRepo extends JpaRepository<Store, Long> {
 
-    boolean existsByUrl(String url);
+    boolean existsByDomain(String domain);
     
 }

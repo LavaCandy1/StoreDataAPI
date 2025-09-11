@@ -22,7 +22,9 @@ public class Store {
     private String accessToken;
     
     @Column(nullable=false, unique = true)
-    private String url;
+    private String domain;
+
+    private String email;
 
     private Date lastSynced;
 

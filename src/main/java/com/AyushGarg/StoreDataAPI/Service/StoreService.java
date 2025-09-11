@@ -1,5 +1,8 @@
 package com.AyushGarg.StoreDataAPI.Service;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +15,28 @@ public class StoreService {
     @Autowired
     private StoreRepo storeRepo;
 
-    public Store createStore(Store store) {
+    @Autowired
+    private ShopifyValidationService shopifyValidationService;
+
+    public Store createStore(String domain, String accessToken) {
         
-        if(storeRepo.existsByUrl(store.getUrl())){
+        if(storeRepo.existsByDomain(domain)){
             return null;
         } else {
             //sync stores data and update last synced
             //add url and token validation here too
-            return storeRepo.save(store);
+            Store createdStore = shopifyValidationService
+                                                    .gerShopNameIfValid(domain, accessToken)
+                                                    .block();
+
+            if(createdStore==null) return null;
+
+            return storeRepo.save(createdStore);
         }
+    }
+
+    public List<Store> getAllStores() {
+        return storeRepo.findAll();
     }
 
     
