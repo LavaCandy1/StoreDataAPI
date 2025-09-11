@@ -32,6 +32,6 @@ public class Customer {
     //although in customers it has # at start
     private String country;
 
-    private Long storeId;
+    private String storeDomain;
     
 }

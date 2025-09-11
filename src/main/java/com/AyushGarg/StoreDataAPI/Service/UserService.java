@@ -32,11 +32,21 @@ public class UserService {
 
     }
     
-    public Set<Store> getUserStores(Long userId) {
+    public Set<Store> getUserStores(String email) {
 
-        return userRepo.findById(userId)
+        return userRepo.findByEmail(email)
                         .map(User::getStores)
                         .orElse(null);
+    }
+
+    public User getUserByEmail(String email) {
+        
+        return userRepo.findByEmail(email)
+                        .orElse(null);
+    }
+
+    public void saveUser(User user) {
+        userRepo.save(user);
     }
 
 }
