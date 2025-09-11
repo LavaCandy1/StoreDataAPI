@@ -2,9 +2,13 @@ package com.AyushGarg.StoreDataAPI.Models;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -33,5 +37,12 @@ public class Customer {
     private String country;
 
     private String storeDomain;
+
+    @OneToMany(
+        mappedBy = "customer",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<Order> orders = new ArrayList<>();
     
 }

@@ -1,10 +1,12 @@
 package com.AyushGarg.StoreDataAPI.Models;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -26,7 +28,10 @@ public class Product {
 
     private Date createdAt;
     
-    private Long storeId;
+    private String storeDomain;
+
+    @OneToMany(mappedBy = "product")
+    private List<LineItem> orderItems = new ArrayList<>();
 
 
 }
