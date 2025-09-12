@@ -91,7 +91,6 @@ public class CustomerDataIngestionService {
                     // .bodyToMono(String.class)
                     .block();
 
-            System.out.println(response);
 
             if (response != null && response.getCustomers() != null) {
                 for (CustomerEdgeDTO edge : response.getCustomers().getEdges()) {
@@ -106,7 +105,6 @@ public class CustomerDataIngestionService {
             }
 
         } while (hasNextPage);
-        System.out.println("Finished initial sync for customers for store: " + store.getDomain());
     }
 
     private void saveCustomer(ShopifyCustomerDTO node, Long storeId) {

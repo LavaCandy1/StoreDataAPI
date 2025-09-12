@@ -16,6 +16,7 @@ import com.AyushGarg.StoreDataAPI.DTO.StoreRequestDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
 import com.AyushGarg.StoreDataAPI.Service.StoreService;
 import com.AyushGarg.StoreDataAPI.Service.IngestionService.CustomerDataIngestionService;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.OrderDataIngestionService;
 import com.AyushGarg.StoreDataAPI.Service.IngestionService.ProductDataIngestionService;
 
 @RestController
@@ -30,6 +31,9 @@ public class StoreControler {
 
     @Autowired
     private CustomerDataIngestionService customerDataIngector;
+
+    @Autowired
+    private OrderDataIngestionService orderDataIngector;
 
     @PostMapping
     public ResponseEntity<Store> createStore(@RequestBody StoreRequestDTO storeRequestDTO){
@@ -63,6 +67,15 @@ public class StoreControler {
         customerDataIngector.ingest(storeId);
 
         return ResponseEntity.ok("Check Database for Customers.");
+
+    }
+
+    @PostMapping("/{storeId}/ingestOrders")
+    public ResponseEntity<String> ingestOrders(@PathVariable Long storeId){
+
+        orderDataIngector.ingest(storeId);
+
+        return ResponseEntity.ok("Check Database for Orders.");
 
     }
     

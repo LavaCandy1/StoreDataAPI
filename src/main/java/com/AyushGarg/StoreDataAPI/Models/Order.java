@@ -23,17 +23,15 @@ import lombok.Data;
 public class Order {
 
     @Id
-    private Long orderId;
+    private Long orderId; //
 
     private String orderNumber;
-    private Date createdAt;
+    private Date createdAt; //
     
     private BigDecimal totalPrice;
     private String financialStatus;
-
-    private Long customerId;
     
-    private String storeDomain;
+    private Long storeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)

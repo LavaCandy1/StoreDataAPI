@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -31,18 +33,19 @@ public class Customer {
     private BigDecimal totalSpent;
     
     private Long lastOrderId;
-    private String lastOrderNumber;
     // in orders.json it is named as order_number but in customers json it is last_order_name so i went with lastOrderNumber for consistency
     //although in customers it has # at start
     private String country;
 
-    private String storeDomain;
+    private Long storeId;
 
     @OneToMany(
         mappedBy = "customer",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @ElementCollection
+    @Column(name = "orders", columnDefinition = "text[]")
     private List<Order> orders = new ArrayList<>();
     
 }
