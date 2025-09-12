@@ -23,10 +23,9 @@ import lombok.Data;
 public class Order {
 
     @Id
-    private Long orderId; //
+    private Long orderId;
 
-    private String orderNumber;
-    private Date createdAt; //
+    private Date createdAt;
     
     private BigDecimal totalPrice;
     private String financialStatus;

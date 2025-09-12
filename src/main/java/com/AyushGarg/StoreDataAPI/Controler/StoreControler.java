@@ -78,5 +78,16 @@ public class StoreControler {
         return ResponseEntity.ok("Check Database for Orders.");
 
     }
+
+    @PostMapping("/{storeId}/sync")
+    public ResponseEntity<String> sync(@PathVariable Long storeId){
+
+        productDataIngector.ingest(storeId);
+        customerDataIngector.ingest(storeId);
+        orderDataIngector.ingest(storeId);
+
+        return ResponseEntity.ok("Check Database for Orders.");
+
+    }
     
 }

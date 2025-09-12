@@ -76,6 +76,7 @@ public class OrderDataIngestionService {
                             id
                             name
                             createdAt
+                            displayFinancialStatus
                             currentTotalPriceSet {
                                 shopMoney {
                                     amount
@@ -148,11 +149,13 @@ public class OrderDataIngestionService {
     private void saveOrder(ShopifyOrderDTO node, Long storeId) {
         if (node.getOrderId() == null) return;
 
+        // System.out.println(node);
         Order order = orderRepo.findById(node.getOrderId())
                 .orElse(new Order());
 
         order.setOrderId(node.getOrderId());
         order.setCreatedAt(new Date(node.getCreatedAt().getTime()));
+        order.setFinancialStatus(node.getFinancialStatus());
 
         if (node.getCurrentTotalPrice() != null && node.getCurrentTotalPrice().getShopMoney() != null) {
             order.setTotalPrice(node.getCurrentTotalPrice().getShopMoney().getAmount());

@@ -32,9 +32,7 @@ public class Product {
     private String handle;
     private String status;
 
-    @ElementCollection
-    @Column(name = "tags", columnDefinition = "text[]")
-    private List<String> tags;
+    private String tags;
 
     private ZonedDateTime createdAt;
     

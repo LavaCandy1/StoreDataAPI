@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.AyushGarg.StoreDataAPI.Models.Store;
 import com.AyushGarg.StoreDataAPI.Repositories.StoreRepo;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.CustomerDataIngestionService;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.OrderDataIngestionService;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.ProductDataIngestionService;
 
 @Service
 public class StoreService {
@@ -16,6 +19,13 @@ public class StoreService {
 
     @Autowired
     private ShopifyValidationService shopifyValidationService;
+
+    @Autowired
+    private CustomerDataIngestionService customerDataIngestionService;
+    @Autowired
+    private ProductDataIngestionService productDataIngestionService;
+    @Autowired
+    private OrderDataIngestionService orderDataIngestionService;
 
     public Store createStore(String domain, String accessToken) {
         
@@ -36,6 +46,13 @@ public class StoreService {
 
     public List<Store> getAllStores() {
         return storeRepo.findAll();
+    }
+
+    public void sync(Long storeId) {
+        
+        productDataIngestionService.ingest(storeId);
+        customerDataIngestionService.ingest(storeId);
+        orderDataIngestionService.ingest(storeId);
     }
 
     

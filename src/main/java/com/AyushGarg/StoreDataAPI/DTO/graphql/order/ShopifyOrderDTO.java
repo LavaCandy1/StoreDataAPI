@@ -5,14 +5,18 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Data
 public class ShopifyOrderDTO {
     
     private String id;
-    private String name;
-    private Integer orderNumber;
     private Date createdAt;
+
+    @JsonProperty("displayFinancialStatus")
     private String financialStatus;
+
+    @JsonProperty("currentTotalPriceSet")
     private TotalPriceSetDTO currentTotalPrice;
     private CustomerDTO customer;
     private LineItemsDTO lineItems;

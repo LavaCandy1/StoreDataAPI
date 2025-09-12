@@ -25,7 +25,7 @@ public class UserService {
 
     public UserResponseDTO createUser(User user){
         
-        if(userRepo.findByEmail(user.getEmail())!=null){
+        if(userRepo.findByEmail(user.getEmail())==null){
             return null;
         }
         return new UserResponseDTO(userRepo.save(user));

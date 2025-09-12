@@ -124,7 +124,7 @@ public class ProductDataIngestionService {
         product.setCreatedAt(node.getCreatedAt());
         product.setHandle(node.getHandle());
         product.setStatus(node.getStatus());
-        // product.setTags(node.getTags());
+        product.setTags(node.getTags().toString());
 
 
 
