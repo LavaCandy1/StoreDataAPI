@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.AyushGarg.StoreDataAPI.DTO.StoreRequestDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
 import com.AyushGarg.StoreDataAPI.Service.StoreService;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.CustomerDataIngestionService;
 import com.AyushGarg.StoreDataAPI.Service.IngestionService.ProductDataIngestionService;
 
 @RestController
@@ -25,7 +26,10 @@ public class StoreControler {
     private StoreService storeService;
 
     @Autowired
-    private ProductDataIngestionService productIngector;
+    private ProductDataIngestionService productDataIngector;
+
+    @Autowired
+    private CustomerDataIngestionService customerDataIngector;
 
     @PostMapping
     public ResponseEntity<Store> createStore(@RequestBody StoreRequestDTO storeRequestDTO){
@@ -47,9 +51,18 @@ public class StoreControler {
     @PostMapping("/{storeId}/ingestProducts")
     public ResponseEntity<String> ingestProduct(@PathVariable Long storeId){
 
-        productIngector.ingest(storeId);
+        productDataIngector.ingest(storeId);
 
         return ResponseEntity.ok("Check Database for Products.");
+
+    }
+
+    @PostMapping("/{storeId}/ingestCustomers")
+    public ResponseEntity<String> ingestCustomer(@PathVariable Long storeId){
+
+        customerDataIngector.ingest(storeId);
+
+        return ResponseEntity.ok("Check Database for Customers.");
 
     }
     
