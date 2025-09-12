@@ -1,16 +1,24 @@
 package com.AyushGarg.StoreDataAPI.Models;
 
 import java.sql.Date;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name="products")
 public class Product {
@@ -22,13 +30,15 @@ public class Product {
     private String vendor;
     private String productType;
     private String handle;
-    private boolean status;
+    private String status;
 
+    @ElementCollection
+    @Column(name = "tags", columnDefinition = "text[]")
     private List<String> tags;
 
-    private Date createdAt;
+    private ZonedDateTime createdAt;
     
-    private String storeDomain;
+    private Long storeId;
 
     @OneToMany(mappedBy = "product")
     private List<LineItem> orderItems = new ArrayList<>();

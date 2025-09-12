@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.AyushGarg.StoreDataAPI.DTO.StoreRequestDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
 import com.AyushGarg.StoreDataAPI.Service.StoreService;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.ProductDataIngestionService;
 
 @RestController
 @RequestMapping("/store")
@@ -21,6 +23,9 @@ public class StoreControler {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private ProductDataIngestionService productIngector;
 
     @PostMapping
     public ResponseEntity<Store> createStore(@RequestBody StoreRequestDTO storeRequestDTO){
@@ -37,6 +42,15 @@ public class StoreControler {
     @GetMapping
     public ResponseEntity<List<Store>> getAllStores(){
         return ResponseEntity.ok(storeService.getAllStores());
+    }
+
+    @PostMapping("/{storeId}/ingestProducts")
+    public ResponseEntity<String> ingestProduct(@PathVariable Long storeId){
+
+        productIngector.ingest(storeId);
+
+        return ResponseEntity.ok("Check Database for Products.");
+
     }
     
 }
