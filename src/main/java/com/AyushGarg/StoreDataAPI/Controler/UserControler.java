@@ -61,12 +61,16 @@ public class UserControler {
     }
 
     @GetMapping("/{email}/stores") //for getting stores (and related data maybe?!)
-    public ResponseEntity<Set<Store>> getStores(@PathVariable String email){
+    public ResponseEntity<Set<StoreResponseDTO>> getStores(@PathVariable String email){
 
         Set<Store> stores = userService.getUserStores(email);
 
         if(stores!=null){
-            return ResponseEntity.ok(stores);
+            Set<StoreResponseDTO> storeResponseDTOs = new HashSet<>();
+            for (Store store : stores) {
+                storeResponseDTOs.add(new StoreResponseDTO(store));
+            }
+            return ResponseEntity.ok(storeResponseDTOs);
         } else {
             return ResponseEntity.notFound().build();
         }
