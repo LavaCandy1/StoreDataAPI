@@ -36,7 +36,7 @@ public class UserControler {
     @GetMapping("/{id}") //for getting userdetials for profile
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long userId) {
 
-        UserResponseDTO user = userService.getUserById(userId);
+        UserResponseDTO user = userService.getUserDetailsById(userId);
         
         if(user!=null){
             return ResponseEntity.ok(user);
@@ -77,11 +77,11 @@ public class UserControler {
     }
 
 
-    @PostMapping("/{email}/addStore")
-    public ResponseEntity<StoreResponseDTO> createStoreThroughUser(@PathVariable String email, @RequestBody StoreRequestDTO storeRequestDTO){
+    @PostMapping("/{id}/addStore")
+    public ResponseEntity<StoreResponseDTO> createStoreThroughUser(@PathVariable Long id, @RequestBody StoreRequestDTO storeRequestDTO){
 
         
-        User fetchUser = userService.getUserByEmail(email);
+        User fetchUser = userService.getUserById(id);
         if (fetchUser==null){
             return ResponseEntity.notFound().build();
         }

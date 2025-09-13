@@ -2,7 +2,11 @@ package com.AyushGarg.StoreDataAPI.Service;
 
 import java.util.Set;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.AyushGarg.StoreDataAPI.DTO.UserResponseDTO;
@@ -15,8 +19,18 @@ public class UserService {
     
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
     
-    public UserResponseDTO getUserById(Long id) {
+    public User getUserById(Long id) {
+
+        return userRepo.findById(id)
+                        .orElse(null);
+    }
+    public UserResponseDTO getUserDetailsById(Long id) {
 
         return userRepo.findById(id)
                         .map(UserResponseDTO::new)
@@ -28,6 +42,7 @@ public class UserService {
         if(userRepo.findByEmail(user.getEmail())==null){
             return null;
         }
+        user.setPassword(passwordEncoder.encode((user.getPassword())));
         return new UserResponseDTO(userRepo.save(user));
 
     }
@@ -47,6 +62,16 @@ public class UserService {
 
     public void saveUser(User user) {
         userRepo.save(user);
+    }
+
+    public String verifyUser(User user) {
+
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
+        
+        return "Authentication failed";
     }
 
 }
