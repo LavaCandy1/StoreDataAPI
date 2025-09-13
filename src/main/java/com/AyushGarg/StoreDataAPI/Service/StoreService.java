@@ -1,5 +1,6 @@
 package com.AyushGarg.StoreDataAPI.Service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +49,23 @@ public class StoreService {
         return storeRepo.findAll();
     }
 
-    public void sync(Long storeId) {
+    public boolean sync(Long storeId) {
+
+        Store fetchStore = storeRepo.findById(storeId)
+                                    .orElse(null);
+        if (fetchStore==null) return false;
         
         productDataIngestionService.ingest(storeId);
         customerDataIngestionService.ingest(storeId);
         orderDataIngestionService.ingest(storeId);
+
+        fetchStore.setLastSynced(new Date());
+
+        storeRepo.save(fetchStore);
+        return true;
+
+        
+
     }
 
     

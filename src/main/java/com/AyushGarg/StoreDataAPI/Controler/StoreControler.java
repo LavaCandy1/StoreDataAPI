@@ -82,11 +82,12 @@ public class StoreControler {
     @PostMapping("/{storeId}/sync")
     public ResponseEntity<String> sync(@PathVariable Long storeId){
 
-        productDataIngector.ingest(storeId);
-        customerDataIngector.ingest(storeId);
-        orderDataIngector.ingest(storeId);
+        boolean synced = storeService.sync(storeId);
 
-        return ResponseEntity.ok("Check Database for Orders.");
+        if (synced)
+        return ResponseEntity.ok("Synced Database for store "+storeId+".");
+        else 
+        return ResponseEntity.badRequest().build();
 
     }
     
