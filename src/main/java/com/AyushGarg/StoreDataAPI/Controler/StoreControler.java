@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.AyushGarg.StoreDataAPI.DTO.StoreRequestDTO;
 import com.AyushGarg.StoreDataAPI.DTO.StoreResponseDTO;
+import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsRequestDTO;
+import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsResponseDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
 import com.AyushGarg.StoreDataAPI.Service.StoreService;
 import com.AyushGarg.StoreDataAPI.Service.IngestionService.CustomerDataIngestionService;
@@ -94,6 +97,21 @@ public class StoreControler {
         return ResponseEntity.ok("Synced Database for store "+storeId+".");
         else 
         return ResponseEntity.badRequest().build();
+
+    }
+
+    //for analytical data
+
+    @GetMapping("/{id}/analytics")
+    public ResponseEntity<AnalyticsResponseDTO> getAnalyticsData(@PathVariable Long id, @RequestParam String startDate, @RequestParam String endDate){
+
+        AnalyticsResponseDTO analyticsData = storeService.getAnalytics(id, startDate, endDate);
+
+        if(analyticsData!=null){
+            return ResponseEntity.ok(analyticsData);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
 
     }
     

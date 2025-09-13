@@ -12,12 +12,14 @@ import lombok.Data;
 public class StoreResponseDTO {
 
     public StoreResponseDTO(Store store){
+        this.storeId = store.getStoreId();
         this.domain = store.getDomain();
         this.email = store.getEmail();
         this.storeName = store.getStoreName();
         this.lastSynced = store.getLastSynced();
     }
 
+    private Long storeId;
     private String storeName;
     private String domain;
     private String email;
