@@ -38,7 +38,7 @@ public class SecurityConfig {
             )
             .headers(headers -> headers.frameOptions().disable())
             .cors(Customizer.withDefaults())
-            .formLogin(Customizer.withDefaults())
+            // .formLogin(Customizer.withDefaults())
             .httpBasic(Customizer.withDefaults())
             .build();
     }
@@ -67,7 +67,7 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*"));
+        config.setAllowedOrigins(List.of("http://localhost:7000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);

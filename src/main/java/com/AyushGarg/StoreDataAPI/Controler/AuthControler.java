@@ -22,7 +22,6 @@ public class AuthControler {
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> registerUser(@RequestBody User user) {
 
-        System.out.println(user);
         UserResponseDTO createdUser = userService.createUser(user);
         // UserResponseDTO createdUser = new UserResponseDTO(user);
         return ResponseEntity.ok(createdUser);

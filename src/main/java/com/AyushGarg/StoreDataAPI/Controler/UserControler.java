@@ -48,10 +48,8 @@ public class UserControler {
     @PostMapping //for signup
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody User user){
 
-        System.out.println(user);
         UserResponseDTO createdUser = userService.createUser(user);
 
-        System.out.println(createdUser);
         
         if(createdUser!=null){
             return ResponseEntity.ok(createdUser);
@@ -98,7 +96,6 @@ public class UserControler {
         if(stores==null) stores = new HashSet<>();
 
         stores.add(createdStore);
-        System.out.println(stores);
         fetchUser.setStores(stores);
 
         userService.saveUser(fetchUser);
