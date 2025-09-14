@@ -8,8 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsResponseDTO;
-import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsTotalsDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.OrdersByDateDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.StoreTotalDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.TopCustomerDTO;
@@ -82,7 +80,7 @@ public class StoreService {
 
     }
 
-    public AnalyticsResponseDTO getAnalytics(Long storeId, String startDateStr, String endDateStr) {
+    public List<OrdersByDateDTO> getAnalytics(Long storeId, String startDateStr, String endDateStr) {
 
         if (!storeRepo.existsById(storeId)) {
             throw new EntityNotFoundException("Store with id " + storeId + " not found.");
@@ -97,17 +95,7 @@ public class StoreService {
             throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
         }
 
-        AnalyticsTotalsDTO totals = orderRepo.getAnalyticsTotals(storeId, startDate, endDate);
-        List<OrdersByDateDTO> ordersByDate = orderRepo.findOrdersByDate(storeId, startDate, endDate);
-
-
-        AnalyticsResponseDTO response = new AnalyticsResponseDTO();
-        response.setTotalRevenue(totals.getTotalRevenue());
-        response.setTotalOrders(totals.getTotalOrders());
-        response.setTotalCustomers(totals.getTotalCustomers());
-        response.setOrdersByDate(ordersByDate);
-
-        return response;
+        return orderRepo.findOrdersByDate(storeId, startDate, endDate);
     }
 
     public List<TopCustomerDTO> getTopCustomers(Long id) {

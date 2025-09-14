@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.AyushGarg.StoreDataAPI.DTO.StoreRequestDTO;
 import com.AyushGarg.StoreDataAPI.DTO.StoreResponseDTO;
-import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsResponseDTO;
+import com.AyushGarg.StoreDataAPI.DTO.analytics.OrdersByDateDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.StoreTotalDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.TopCustomerDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
@@ -103,10 +103,10 @@ public class StoreControler {
 
     //for analytical data
 
-    @GetMapping("/{id}/analytics")
-    public ResponseEntity<AnalyticsResponseDTO> getAnalyticsData(@PathVariable Long id, @RequestParam String startDate, @RequestParam String endDate){
+    @GetMapping("/{id}/ordersByDate")
+    public ResponseEntity<List<OrdersByDateDTO>> ordersByDate(@PathVariable Long id, @RequestParam String startDate, @RequestParam String endDate){
 
-        AnalyticsResponseDTO analyticsData = storeService.getAnalytics(id, startDate, endDate);
+        List<OrdersByDateDTO> analyticsData = storeService.getAnalytics(id, startDate, endDate);
 
         if(analyticsData!=null){
             return ResponseEntity.ok(analyticsData);
