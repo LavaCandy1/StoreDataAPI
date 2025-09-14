@@ -1,6 +1,7 @@
 package com.AyushGarg.StoreDataAPI.Controler;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -90,15 +91,16 @@ public class StoreControler {
     }
 
     @PostMapping("/{storeId}/sync")
-    public ResponseEntity<String> sync(@PathVariable Long storeId){
-
+    public ResponseEntity<Object> sync(@PathVariable Long storeId) {
         boolean synced = storeService.sync(storeId);
 
-        if (synced)
-        return ResponseEntity.ok("Synced Database for store "+storeId+".");
-        else 
-        return ResponseEntity.badRequest().build();
-
+        if (synced) {
+            Map<String, String> responseBody = Map.of("message", "Sync completed successfully.");
+            return ResponseEntity.ok(responseBody);
+        } else {
+            Map<String, String> errorBody = Map.of("message", "Sync failed.");
+            return ResponseEntity.status(500).body(errorBody);
+        }
     }
 
     //for analytical data

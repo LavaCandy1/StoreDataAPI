@@ -70,6 +70,12 @@ public class StoreService {
         Store fetchStore = storeRepo.findById(storeId)
                                     .orElse(null);
         if (fetchStore==null) return false;
+
+        if(fetchStore.getLastSynced()!=null){
+            long diff = new java.util.Date().getTime() - fetchStore.getLastSynced().getTime();
+            long diffInHours = diff / (1000 * 60 * 60);
+            if(diffInHours<6) return true;
+        }
         
         productDataIngestionService.ingest(storeId);
         customerDataIngestionService.ingest(storeId);
