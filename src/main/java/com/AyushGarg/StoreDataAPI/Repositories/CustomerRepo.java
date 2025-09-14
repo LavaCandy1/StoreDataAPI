@@ -11,4 +11,6 @@ import com.AyushGarg.StoreDataAPI.Models.Customer;
 public interface CustomerRepo extends JpaRepository<Customer,Long>{
     
     List<Customer> findTop5ByStoreIdOrderByTotalSpentDesc(Long storeId);
+
+    Long countByStoreId(Long storeId);
 }

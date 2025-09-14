@@ -1,5 +1,6 @@
 package com.AyushGarg.StoreDataAPI.Repositories;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -43,5 +44,9 @@ public interface OrderRepo extends JpaRepository<Order,Long>{
         @Param("endDate") Date endDate
     );
 
+    Long countByStoreId(Long id);
+
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Order o WHERE o.storeId = :storeId")
+    BigDecimal getTotalRevenueByStoreId(@Param("storeId") Long storeId);
     
 }

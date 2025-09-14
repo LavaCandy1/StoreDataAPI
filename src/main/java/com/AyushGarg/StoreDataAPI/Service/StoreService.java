@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsResponseDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsTotalsDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.OrdersByDateDTO;
+import com.AyushGarg.StoreDataAPI.DTO.analytics.StoreTotalDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.TopCustomerDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
 import com.AyushGarg.StoreDataAPI.Repositories.CustomerRepo;
@@ -48,8 +49,6 @@ public class StoreService {
         if(storeRepo.existsByDomain(domain)){
             return null;
         } else {
-            //sync stores data and update last synced
-            //add url and token validation here too
             Store createdStore = shopifyValidationService
                                                     .gerShopNameIfValid(domain, accessToken)
                                                     .block();
@@ -119,6 +118,17 @@ public class StoreService {
                                                         .toList();
 
         return topCustomers;
+    }
+
+    public StoreTotalDTO getTotalData(Long id) {
+        
+        StoreTotalDTO totalDTO = new StoreTotalDTO();
+
+        totalDTO.setTotalCustomers(customerRepo.countByStoreId(id));
+        totalDTO.setTotalOrders(orderRepo.countByStoreId(id));
+        totalDTO.setTotalRevenue(orderRepo.getTotalRevenueByStoreId(id));
+
+        return totalDTO;
     }
 
     
