@@ -15,11 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import com.AyushGarg.StoreDataAPI.Service.MyUserDetailsService;
-
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
@@ -32,17 +31,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-
         return http
-            .csrf(customizer -> customizer.disable())
+            .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults()) // This will use the corsConfigurationSource Bean
             .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**","/","/user").permitAll()
-                .anyRequest().authenticated()
+                // Allow public access to login, logout, and the session check endpoint
+                .requestMatchers("/auth/**").permitAll() 
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll() // Keep swagger public
+                .anyRequest().authenticated() // Secure all other API endpoints
             )
-            .headers(headers -> headers.frameOptions().disable())
-            .cors(Customizer.withDefaults())
-            // .formLogin(Customizer.withDefaults())
-            // .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
@@ -51,7 +48,6 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler((request, response, authentication) -> {
-                    System.out.println("Logged out!");
                     response.setStatus(HttpServletResponse.SC_OK);
                 })
             )
@@ -68,27 +64,26 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(myUserDetailsService);
-
         return provider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-         return config.getAuthenticationManager();
-
+        return config.getAuthenticationManager();
     }
 
-    
+    // --- REPLACED CorsFilter with CorsConfigurationSource for better integration ---
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:7000","http://10.215.237.248:7000"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        // IMPORTANT: Update this with your frontend's actual origin(s)
+        config.setAllowedOrigins(List.of("http://localhost:7000", "http://10.215.237.248:7000"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(true); // This is crucial for session cookies
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        return source;
     }
 }
