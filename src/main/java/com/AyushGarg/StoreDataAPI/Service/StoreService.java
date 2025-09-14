@@ -6,16 +6,14 @@ import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsRequestDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsResponseDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsTotalsDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.OrdersByDateDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.TopCustomerDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
+import com.AyushGarg.StoreDataAPI.Repositories.CustomerRepo;
 import com.AyushGarg.StoreDataAPI.Repositories.OrderRepo;
 import com.AyushGarg.StoreDataAPI.Repositories.StoreRepo;
 import com.AyushGarg.StoreDataAPI.Service.IngestionService.CustomerDataIngestionService;
@@ -32,6 +30,8 @@ public class StoreService {
 
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired CustomerRepo customerRepo;
 
     @Autowired
     private ShopifyValidationService shopifyValidationService;
@@ -85,12 +85,10 @@ public class StoreService {
 
     public AnalyticsResponseDTO getAnalytics(Long storeId, String startDateStr, String endDateStr) {
 
-        // 1. Validate the store exists
         if (!storeRepo.existsById(storeId)) {
             throw new EntityNotFoundException("Store with id " + storeId + " not found.");
         }
 
-        // 2. Parse and validate the date strings to java.sql.Date
         Date startDate;
         Date endDate;
         try {
@@ -100,23 +98,27 @@ public class StoreService {
             throw new IllegalArgumentException("Invalid date format. Please use YYYY-MM-DD.");
         }
 
-        // 3. Call the repository methods to fetch the data
         AnalyticsTotalsDTO totals = orderRepo.getAnalyticsTotals(storeId, startDate, endDate);
         List<OrdersByDateDTO> ordersByDate = orderRepo.findOrdersByDate(storeId, startDate, endDate);
 
-        // Create a Pageable object to request only the top 5 results
-        Pageable topFive = PageRequest.of(0, 5);
-        List<TopCustomerDTO> topCustomers = orderRepo.findTopCustomersBySpend(storeId, startDate, endDate, topFive);
 
-        // 4. Assemble the final response DTO
         AnalyticsResponseDTO response = new AnalyticsResponseDTO();
         response.setTotalRevenue(totals.getTotalRevenue());
         response.setTotalOrders(totals.getTotalOrders());
         response.setTotalCustomers(totals.getTotalCustomers());
         response.setOrdersByDate(ordersByDate);
-        response.setTopCustomers(topCustomers);
 
         return response;
+    }
+
+    public List<TopCustomerDTO> getTopCustomers(Long id) {
+        
+        List<TopCustomerDTO> topCustomers = customerRepo.findTop5ByStoreIdOrderByTotalSpentDesc(id)
+                                                        .stream()
+                                                        .map(TopCustomerDTO::new)
+                                                        .toList();
+
+        return topCustomers;
     }
 
     

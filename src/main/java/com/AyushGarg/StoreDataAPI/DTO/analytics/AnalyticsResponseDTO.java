@@ -12,6 +12,5 @@ public class AnalyticsResponseDTO {
     private Long totalOrders;
     private Long totalCustomers;
     private List<OrdersByDateDTO> ordersByDate;
-    private List<TopCustomerDTO> topCustomers;
     
 }

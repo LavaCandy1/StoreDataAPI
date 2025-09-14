@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.AyushGarg.StoreDataAPI.DTO.StoreRequestDTO;
 import com.AyushGarg.StoreDataAPI.DTO.StoreResponseDTO;
-import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsRequestDTO;
 import com.AyushGarg.StoreDataAPI.DTO.analytics.AnalyticsResponseDTO;
+import com.AyushGarg.StoreDataAPI.DTO.analytics.TopCustomerDTO;
 import com.AyushGarg.StoreDataAPI.Models.Store;
 import com.AyushGarg.StoreDataAPI.Service.StoreService;
 import com.AyushGarg.StoreDataAPI.Service.IngestionService.CustomerDataIngestionService;
@@ -113,6 +113,18 @@ public class StoreControler {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
+    }
+
+    @GetMapping("/{id}/topCustomers")
+    public ResponseEntity<List<TopCustomerDTO>> getTopCustomers(@PathVariable Long id){
+
+        List<TopCustomerDTO> topCustomers = storeService.getTopCustomers(id);
+
+        if(topCustomers!=null){
+            return ResponseEntity.ok(topCustomers);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     
 }
