@@ -75,11 +75,11 @@ public class UserControler {
     }
 
 
-    @PostMapping("/{id}/addStore")
-    public ResponseEntity<StoreResponseDTO> createStoreThroughUser(@PathVariable Long id, @RequestBody StoreRequestDTO storeRequestDTO){
+    @PostMapping("/{email}/addStore")
+    public ResponseEntity<StoreResponseDTO> createStoreThroughUser(@PathVariable String email, @RequestBody StoreRequestDTO storeRequestDTO){
 
         
-        User fetchUser = userService.getUserById(id);
+        User fetchUser = userService.getUserByEmail(email);
         if (fetchUser==null){
             return ResponseEntity.notFound().build();
         }
