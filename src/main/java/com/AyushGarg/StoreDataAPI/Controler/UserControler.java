@@ -78,18 +78,19 @@ public class UserControler {
     @PostMapping("/{email}/addStore")
     public ResponseEntity<StoreResponseDTO> createStoreThroughUser(@PathVariable String email, @RequestBody StoreRequestDTO storeRequestDTO){
 
+        System.out.println(email);
         
         User fetchUser = userService.getUserByEmail(email);
         if (fetchUser==null){
+            System.out.println("no user");
             return ResponseEntity.notFound().build();
         }
 
         Store createdStore = storeService.createStore(storeRequestDTO.getDomain(), storeRequestDTO.getAccessToken());
         if(createdStore==null){
+            System.out.println("no store");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
-        
-        storeService.sync(createdStore.getStoreId());
 
         Set<Store> stores = fetchUser.getStores();
 
@@ -99,6 +100,8 @@ public class UserControler {
         fetchUser.setStores(stores);
 
         userService.saveUser(fetchUser);
+
+        System.out.println(createdStore);
 
         return ResponseEntity.ok(new StoreResponseDTO(createdStore));
     }

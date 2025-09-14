@@ -45,15 +45,19 @@ public class StoreService {
     public Store createStore(String domain, String accessToken) {
         
         if(storeRepo.existsByDomain(domain)){
-            return null;
+            return storeRepo.findByDomain(domain);
         } else {
-            Store createdStore = shopifyValidationService
+            Store verifyStore = shopifyValidationService
                                                     .gerShopNameIfValid(domain, accessToken)
                                                     .block();
 
-            if(createdStore==null) return null;
+            if(verifyStore==null) return null;
 
-            return storeRepo.save(createdStore);
+            Store createdStore = storeRepo.save(verifyStore);
+            sync(createdStore.getStoreId());
+
+            return createdStore;
+
         }
     }
 

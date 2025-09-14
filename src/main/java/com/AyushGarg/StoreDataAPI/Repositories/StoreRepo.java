@@ -9,5 +9,7 @@ import com.AyushGarg.StoreDataAPI.Models.Store;
 public interface StoreRepo extends JpaRepository<Store, Long> {
 
     boolean existsByDomain(String domain);
+
+    Store findByDomain(String domain);
     
 }
