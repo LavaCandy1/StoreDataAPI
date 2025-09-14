@@ -33,10 +33,10 @@ public class UserControler {
     private StoreService storeService;
 
 
-    @GetMapping("/{id}") //for getting userdetials for profile
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long userId) {
+    @GetMapping("/{email}") //for getting userdetials for profile
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String email) {
 
-        UserResponseDTO user = userService.getUserDetailsById(userId);
+        UserResponseDTO user = userService.getUserDetailsByEmail(email);
         
         if(user!=null){
             return ResponseEntity.ok(user);
@@ -58,7 +58,7 @@ public class UserControler {
         }
     }
 
-    @GetMapping("/{email}/stores") //for getting stores (and related data maybe?!)
+    @GetMapping("/{email}/stores") //for getting stores 
     public ResponseEntity<Set<StoreResponseDTO>> getStores(@PathVariable String email){
 
         Set<Store> stores = userService.getUserStores(email);

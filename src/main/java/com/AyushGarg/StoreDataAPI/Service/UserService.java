@@ -20,8 +20,6 @@ public class UserService {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
     
@@ -30,9 +28,9 @@ public class UserService {
         return userRepo.findById(id)
                         .orElse(null);
     }
-    public UserResponseDTO getUserDetailsById(Long id) {
+    public UserResponseDTO getUserDetailsByEmail(String email) {
 
-        return userRepo.findById(id)
+        return userRepo.findByEmail(email)
                         .map(UserResponseDTO::new)
                         .orElse(null);
     }
@@ -64,14 +62,6 @@ public class UserService {
         userRepo.save(user);
     }
 
-    public String verifyUser(User user) {
 
-        Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
-        );
-
-        
-        return "Authentication failed";
-    }
 
 }
