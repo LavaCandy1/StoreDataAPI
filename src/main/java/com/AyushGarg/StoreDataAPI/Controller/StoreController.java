@@ -1,4 +1,4 @@
-package com.AyushGarg.StoreDataAPI.Controler;
+package com.AyushGarg.StoreDataAPI.Controller;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ import com.AyushGarg.StoreDataAPI.Service.IngestionService.ProductDataIngestionS
 
 @RestController
 @RequestMapping("/store")
-public class StoreControler {
+public class StoreController {
 
     @Autowired
     private StoreService storeService;

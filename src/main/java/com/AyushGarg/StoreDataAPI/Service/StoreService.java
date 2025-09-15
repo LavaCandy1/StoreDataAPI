@@ -74,7 +74,7 @@ public class StoreService {
         if(fetchStore.getLastSynced()!=null){
             long diff = new java.util.Date().getTime() - fetchStore.getLastSynced().getTime();
             long diffInHours = diff / (1000 * 60 * 60);
-            if(diffInHours<24) return true;
+            if(diffInHours<0.1) return true;
         }
         
         productDataIngestionService.ingest(storeId);

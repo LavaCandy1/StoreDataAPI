@@ -1,4 +1,4 @@
-package com.AyushGarg.StoreDataAPI.Controler;
+package com.AyushGarg.StoreDataAPI.Controller;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,7 @@ import com.AyushGarg.StoreDataAPI.Service.UserService;
 
 @RestController
 @RequestMapping("/user")
-public class UserControler {
+public class UserController {
 
     @Autowired
     private UserService userService;

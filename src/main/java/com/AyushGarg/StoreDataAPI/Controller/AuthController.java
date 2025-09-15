@@ -1,4 +1,4 @@
-package com.AyushGarg.StoreDataAPI.Controler;
+package com.AyushGarg.StoreDataAPI.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import com.AyushGarg.StoreDataAPI.Service.UserService;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthControler {
+public class AuthController {
     
     @Autowired
     private UserService userService;
@@ -23,7 +23,6 @@ public class AuthControler {
     public ResponseEntity<UserResponseDTO> registerUser(@RequestBody User user) {
 
         UserResponseDTO createdUser = userService.createUser(user);
-        // UserResponseDTO createdUser = new UserResponseDTO(user);
         return ResponseEntity.ok(createdUser);
     }
 

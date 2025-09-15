@@ -1,23 +1,19 @@
 package com.AyushGarg.StoreDataAPI.Service.IngestionService;
 
-import java.sql.Date;
 import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.AyushGarg.StoreDataAPI.DTO.graphql.GraphQLResponseDTO;
 import com.AyushGarg.StoreDataAPI.DTO.graphql.PageInfoDTO;
 import com.AyushGarg.StoreDataAPI.DTO.graphql.customer.CustomerEdgeDTO;
 import com.AyushGarg.StoreDataAPI.DTO.graphql.customer.CustomerQueryResponseDTO;
-import com.AyushGarg.StoreDataAPI.DTO.graphql.customer.ShopifyCustomerDTO;
-import com.AyushGarg.StoreDataAPI.Models.Customer;
 import com.AyushGarg.StoreDataAPI.Models.Store;
-import com.AyushGarg.StoreDataAPI.Repositories.CustomerRepo;
 import com.AyushGarg.StoreDataAPI.Repositories.StoreRepo;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.PersistenceService.CustomerPersistenceService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -25,16 +21,15 @@ import jakarta.persistence.EntityNotFoundException;
 public class CustomerDataIngestionService {
 
     private final WebClient.Builder webClientBuilder;
-    private final CustomerRepo customerRepo;
     private final StoreRepo storeRepo;
+    private final CustomerPersistenceService customerPersistenceService;
 
-    public CustomerDataIngestionService(WebClient.Builder webClientBuilder, CustomerRepo customerRepo, StoreRepo storeRepo) {
+    public CustomerDataIngestionService(WebClient.Builder webClientBuilder, StoreRepo storeRepo, CustomerPersistenceService customerPersistenceService) {
         this.webClientBuilder = webClientBuilder;
-        this.customerRepo = customerRepo;
         this.storeRepo = storeRepo;
+        this.customerPersistenceService = customerPersistenceService;
     }
 
-    @Transactional
     public void ingest(Long storeId) {
         Store store = storeRepo.findById(storeId)
                 .orElseThrow(() -> new EntityNotFoundException("Store not found with id: " + storeId));
@@ -88,13 +83,11 @@ public class CustomerDataIngestionService {
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<GraphQLResponseDTO<CustomerQueryResponseDTO>>() {})
                     .map(GraphQLResponseDTO::getData)
-                    // .bodyToMono(String.class)
                     .block();
-
 
             if (response != null && response.getCustomers() != null) {
                 for (CustomerEdgeDTO edge : response.getCustomers().getEdges()) {
-                    saveCustomer(edge.getNode(), store.getStoreId());
+                    customerPersistenceService.saveCustomer(edge.getNode(), store.getStoreId());
                 }
 
                 PageInfoDTO pageInfo = response.getCustomers().getPageInfo();
@@ -107,30 +100,5 @@ public class CustomerDataIngestionService {
         } while (hasNextPage);
     }
 
-    private void saveCustomer(ShopifyCustomerDTO node, Long storeId) {
-        if (node.getCustomerId() == null) return;
 
-        Customer customer = customerRepo.findById(node.getCustomerId())
-                .orElse(new Customer());
-
-        customer.setCustomerId(node.getCustomerId());
-        customer.setCreatedAt(new Date(node.getCreatedAt().getTime())); 
-        customer.setFirstName(node.getFirstName());
-        customer.setLastName(node.getLastName());
-        customer.setEmail(node.getEmail());
-        customer.setVerifiedEmail(node.isVerifiedEmail());
-        customer.setOrdersCount(node.getNumberOfOrders());
-        if (node.getTotalSpent() != null) {
-            customer.setTotalSpent(node.getTotalSpent().getAmount());
-        }
-        if (node.getLastOrder() != null) {
-            customer.setLastOrderId(node.getLastOrder().getOrderId());
-        }
-        if (node.getDefaultAddress() != null) {
-            customer.setCountry(node.getDefaultAddress().getCountry());
-        }
-        customer.setStoreId(storeId);
-
-        customerRepo.save(customer);
-    }
 }

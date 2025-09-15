@@ -1,6 +1,5 @@
 package com.AyushGarg.StoreDataAPI.Service.IngestionService;
 
-import java.sql.Date;
 import java.util.Collections;
 import java.util.Map;
 
@@ -11,18 +10,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.AyushGarg.StoreDataAPI.DTO.graphql.GraphQLResponseDTO;
 import com.AyushGarg.StoreDataAPI.DTO.graphql.PageInfoDTO;
-import com.AyushGarg.StoreDataAPI.DTO.graphql.order.ShopifyOrderDTO;
 import com.AyushGarg.StoreDataAPI.DTO.graphql.order.OrderEdgeDTO;
 import com.AyushGarg.StoreDataAPI.DTO.graphql.order.OrderQueryResponseDTO;
-import com.AyushGarg.StoreDataAPI.Models.Customer;
-import com.AyushGarg.StoreDataAPI.Models.LineItem;
-import com.AyushGarg.StoreDataAPI.Models.Order;
-import com.AyushGarg.StoreDataAPI.Models.Product;
 import com.AyushGarg.StoreDataAPI.Models.Store;
-import com.AyushGarg.StoreDataAPI.Repositories.CustomerRepo;
-import com.AyushGarg.StoreDataAPI.Repositories.OrderRepo;
-import com.AyushGarg.StoreDataAPI.Repositories.ProductRepo;
 import com.AyushGarg.StoreDataAPI.Repositories.StoreRepo;
+import com.AyushGarg.StoreDataAPI.Service.IngestionService.PersistenceService.OrderPersistenceService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -30,24 +22,13 @@ import jakarta.persistence.EntityNotFoundException;
 public class OrderDataIngestionService {
     
     private final WebClient.Builder webClientBuilder;
-    private final OrderRepo orderRepo;
     private final StoreRepo storeRepo;
-    private final CustomerRepo customerRepo;
-    private final ProductRepo productRepo;
+    private final OrderPersistenceService orderPersistenceService;
 
-    public OrderDataIngestionService(
-                                        WebClient.Builder webClientBuilder,
-                                        OrderRepo orderRepo, 
-                                        StoreRepo storeRepo, 
-                                        CustomerRepo customerRepo, 
-                                        ProductRepo productRepo) {
-
+    public OrderDataIngestionService(WebClient.Builder webClientBuilder, StoreRepo storeRepo, OrderPersistenceService orderPersistenceService) {
         this.webClientBuilder = webClientBuilder;
-        this.orderRepo = orderRepo;
         this.storeRepo = storeRepo;
-        this.customerRepo = customerRepo;
-        this.productRepo = productRepo;
-
+        this.orderPersistenceService = orderPersistenceService;
     }
 
     @Transactional
@@ -123,13 +104,12 @@ public class OrderDataIngestionService {
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<GraphQLResponseDTO<OrderQueryResponseDTO>>() {})
                     .map(GraphQLResponseDTO::getData)
-                    // .bodyToMono(String.class)
                     .block();
-
 
             if (response != null && response.getOrders() != null) {
                 for (OrderEdgeDTO edge : response.getOrders().getEdges()) {
-                    saveOrder(edge.getNode(), store.getStoreId());
+                    // Call the new service to save each order in its own transaction.
+                    orderPersistenceService.saveOrder(edge.getNode(), store.getStoreId());
                 }
 
                 PageInfoDTO pageInfo = response.getOrders().getPageInfo();
@@ -144,72 +124,72 @@ public class OrderDataIngestionService {
 
     }
 
-    private void saveOrder(ShopifyOrderDTO node, Long storeId) {
-        if (node.getOrderId() == null) return;
+    // private void saveOrder(ShopifyOrderDTO node, Long storeId) {
+    //     if (node.getOrderId() == null) return;
 
-        // System.out.println(node);
-        Order order = orderRepo.findById(node.getOrderId())
-                .orElse(new Order());
+    //     // System.out.println(node);
+    //     Order order = orderRepo.findById(node.getOrderId())
+    //             .orElse(new Order());
 
-        order.setOrderId(node.getOrderId());
-        order.setCreatedAt(new Date(node.getCreatedAt().getTime()));
-        order.setFinancialStatus(node.getFinancialStatus());
+    //     order.setOrderId(node.getOrderId());
+    //     order.setCreatedAt(new Date(node.getCreatedAt().getTime()));
+    //     order.setFinancialStatus(node.getFinancialStatus());
 
-        if (node.getCurrentTotalPrice() != null && node.getCurrentTotalPrice().getShopMoney() != null) {
-            order.setTotalPrice(node.getCurrentTotalPrice().getShopMoney().getAmount());
-        }
+    //     if (node.getCurrentTotalPrice() != null && node.getCurrentTotalPrice().getShopMoney() != null) {
+    //         order.setTotalPrice(node.getCurrentTotalPrice().getShopMoney().getAmount());
+    //     }
 
 
-        if (node.getCustomer() != null && node.getCustomer().getCustomerId() != null) {
-            Long customerId = node.getCustomer().getCustomerId();
+    //     if (node.getCustomer() != null && node.getCustomer().getCustomerId() != null) {
+    //         Long customerId = node.getCustomer().getCustomerId();
 
-            Customer customer = customerRepo.findById(customerId)
-                                            .orElseGet(() -> {
-                                                    Customer c = new Customer();
-                                                    c.setCustomerId(customerId);
-                                                    return customerRepo.save(c);
-                                            });
+    //         Customer customer = customerRepo.findById(customerId)
+    //                                         .orElseGet(() -> {
+    //                                                 Customer c = new Customer();
+    //                                                 c.setCustomerId(customerId);
+    //                                                 return customerRepo.save(c);
+    //                                         });
 
-            order.setCustomer(customer);
-            customer.getOrders().add(order);
+    //         order.setCustomer(customer);
+    //         customer.getOrders().add(order);
 
-            customerRepo.save(customer);
-        } else {
-            return;
-        }
+    //         customerRepo.save(customer);
+    //     } else {
+    //         return;
+    //     }
 
-    if (node.getLineItems() != null && node.getLineItems().getEdges() != null) {
-        order.getItems().clear();
+    // if (node.getLineItems() != null && node.getLineItems().getEdges() != null) {
+    //     order.getItems().clear();
 
-        for (ShopifyOrderDTO.LineItemEdgeDTO edge : node.getLineItems().getEdges()) {
-            ShopifyOrderDTO.LineItemNodeDTO liNode = edge.getNode();
-            if (liNode == null) continue;
+    //     for (ShopifyOrderDTO.LineItemEdgeDTO edge : node.getLineItems().getEdges()) {
+    //         ShopifyOrderDTO.LineItemNodeDTO liNode = edge.getNode();
+    //         if (liNode == null) continue;
 
-            LineItem li = new LineItem();
-            li.setQuantity(liNode.getQuantity() != null ? liNode.getQuantity() : 0);
-            if (liNode.getUnitPrice() != null) li.setPrice(liNode.getUnitPrice());
+    //         LineItem li = new LineItem();
+    //         li.setQuantity(liNode.getQuantity() != null ? liNode.getQuantity() : 0);
+    //         if (liNode.getUnitPrice() != null) li.setPrice(liNode.getUnitPrice());
 
-            if (liNode.getProduct() != null && liNode.getProduct().getProductId() != null) {
-                Long productId = liNode.getProduct().getProductId();
+    //         if (liNode.getProduct() != null && liNode.getProduct().getProductId() != null) {
+    //             Long productId = liNode.getProduct().getProductId();
 
-                Product product = productRepo.findById(productId).orElseGet(() -> {
-                    Product p = new Product();
-                    p.setProductId(productId);
-                    p.setStoreId(storeId);
-                    return productRepo.save(p);
-                });
+    //             Product product = productRepo.findById(productId).orElseGet(() -> {
+    //                 Product p = new Product();
+    //                 p.setProductId(productId);
+    //                 p.setStoreId(storeId);
+    //                 return productRepo.save(p);
+    //             });
 
-                li.setProduct(product);
-            } else {
-                continue;
-            }
+    //             li.setProduct(product);
+    //         } else {
+    //             continue;
+    //         }
 
-            li.setOrder(order);
-            order.getItems().add(li);
-        }
-    }
+    //         li.setOrder(order);
+    //         order.getItems().add(li);
+    //     }
+    // }
 
-        order.setStoreId(storeId);
-        orderRepo.save(order);
-    }
+    //     order.setStoreId(storeId);
+    //     orderRepo.save(order);
+    // }
 }
