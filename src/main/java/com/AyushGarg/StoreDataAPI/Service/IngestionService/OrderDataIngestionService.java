@@ -148,6 +148,9 @@ public class OrderDataIngestionService {
         if (node.getOrderId() == null) return;
 
         // System.out.println(node);
+        if(orderRepo.existsById(node.getOrderId())){
+            return;
+        }
         Order order = orderRepo.findById(node.getOrderId())
                 .orElse(new Order());
 
