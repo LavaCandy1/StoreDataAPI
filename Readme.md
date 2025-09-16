@@ -12,9 +12,9 @@ This project is the backend service for a Shopify Data Analytics application. It
 This application was developed to provide Shopify store owners with a simple, clear interface to analyze their sales data. It allows users to connect multiple stores and view key metrics and trends.
 
 - **Deployed Link for swagger docs:** [https://storedataapi-production.up.railway.app/api](https://storedataapi-production.up.railway.app/api)
-    - (all endpoints are secured by simpleauth except register so you try them using a api testing tool) 
+    - (all endpoints are secured by simple auth except register so you try them using a api testing tool) 
 - **Deployed Frontend Link:** [https://shopify-analytics-app.vercel.app](https://shopify-analytics-app.vercel.app)
-- - **Frontend Repository:** [https://github.com/LavaCandy1/ShopifyAnalyticsApp](https://github.com/LavaCandy1/ShopifyAnalyticsApp)
+- **Frontend Repository:** [https://github.com/LavaCandy1/ShopifyAnalyticsApp](https://github.com/LavaCandy1/ShopifyAnalyticsApp)
 
 ---
 
