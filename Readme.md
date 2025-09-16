@@ -7,7 +7,7 @@
 
 This project is the backend service for a Shopify Data Analytics application. It connects to the Shopify Admin API to fetch store data, processes it, and exposes a secure RESTful API for a front-end client.
 
-## 🚀 About The Project
+## About The Project
 
 This application was developed to provide Shopify store owners with a simple, clear interface to analyze their sales data. It allows users to connect multiple stores and view key metrics and trends.
 
@@ -17,7 +17,7 @@ This application was developed to provide Shopify store owners with a simple, cl
 
 ---
 
-### ✨ Key Features
+###  Key Features
 
 - **Multi-Store Support:** A single user can register and connect multiple Shopify stores.
 - **Secure Authentication:** User registration and login handled using Spring Security.
@@ -27,7 +27,7 @@ This application was developed to provide Shopify store owners with a simple, cl
 
 ---
 
-### 🛠️ Built With
+###  Built With
 
 - **[Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)**
 - **[Spring Boot 3](https://spring.io/projects/spring-boot)**
@@ -54,7 +54,7 @@ To get a local copy up and running, follow these simple steps.
 
 ### Prerequisites
 
-You will need the following software installed on your machine:
+You will need the following :
 
 - Java (JDK) 17 or later
 - Maven or Gradle
@@ -83,15 +83,13 @@ You will need the following software installed on your machine:
     # ---------------------------------
     # DATABASE CONFIGURATION
     # ---------------------------------
-    spring.datasource.url=jdbc:postgresql://localhost:5432/shopify_analytics_db
+    spring.datasource.url=jdbc:postgresql://localhost:5432/shopify_analytics_db #or you db name in place of shopify_analytics_db
     spring.datasource.username=[Your_Postgres_Username]
     spring.datasource.password=[Your_Postgres_Password]
 
     spring.jpa.hibernate.ddl-auto=update
 
     ```
-
-    **Question for you:** Did you use JWT for security? If so, we should include the secret key property. Are there any other important properties?
 
 4.  **Build and run the application:**
 
