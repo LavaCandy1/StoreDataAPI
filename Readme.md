@@ -115,14 +115,14 @@ The API server should now be running on `http://localhost:8000`.
 
 ---
 
-### 📖 API Documentation
+### API Documentation
 
-This API is documented using OpenAPI 3. Once the application is running, you can view the interactive Swagger UI to see all available endpoints and test them directly from your browser. It is currently served at base URL of the applicaiotn (i.e. /api)
+This API is documented using OpenAPI 3. Once the application is running, you can view the interactive Swagger UI to see all available endpoints and test them using a api testing tool as all of them are authenticated (except /auth/*). It is currently served at base URL of the applicaiotn (i.e. /api)
 
-- **Swagger UI URL:** [http://localhost:8000/api](http://localhost:8000/api)
+- **Swagger UI URL:** [https://storedataapi-production.up.railway.app/api](https://storedataapi-production.up.railway.app/api)
 
 ---
 
-### 🧑‍💻 Contact
+### Contact
 
 Ayush Garg – `https://www.linkedin.com/in/ayushgarg-17lc` – `aayush.garg.1793@gmail.com`
