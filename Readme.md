@@ -1,9 +1,9 @@
 # Shopify Data Analytics API
 
-![Java](https://img.shields.io/badge/Java-17-blue)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)
-![Maven](https://img.shields.io/badge/Maven-4.0-red)
+![Java](https://img.shields.io/badge/Java-17-yellow?style=plastic&link=https%3A%2F%2Fwww.oracle.com%2Fjava%2Ftechnologies%2Fjavase%2Fjdk17-archive-downloads.html)
+![Static Badge](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen?style=plastic&link=https%3A%2F%2Fspring.io%2Fprojects%2Fspring-boot)
+![Static Badge](https://img.shields.io/badge/PostgreSQL-15-blue?style=plastic&link=https%3A%2F%2Fwww.postgresql.org%2F)
+![Static Badge](https://img.shields.io/badge/Maven-4.0-red?style=plastic&link=https%3A%2F%2Fmaven.apache.org%2F)
 
 This project is the backend service for a Shopify Data Analytics application. It connects to the Shopify Admin API to fetch store data, processes it, and exposes a secure RESTful API for a front-end client.
 
@@ -11,9 +11,9 @@ This project is the backend service for a Shopify Data Analytics application. It
 
 This application was developed to provide Shopify store owners with a simple, clear interface to analyze their sales data. It allows users to connect multiple stores and view key metrics and trends.
 
-- **Deployed Link for swagger docs:** `https://storedataapi-production.up.railway.app/api`
-- **Frontend Repository:** `https://github.com/LavaCandy1/ShopifyAnalyticsApp`
-- **Deployed Frontend Link:** `https://shopify-analytics-app.vercel.app`
+- **Deployed Link for swagger docs:** [https://storedataapi-production.up.railway.app/api](https://storedataapi-production.up.railway.app/api)
+- **Frontend Repository:** [https://github.com/LavaCandy1/ShopifyAnalyticsApp](https://github.com/LavaCandy1/ShopifyAnalyticsApp)
+- **Deployed Frontend Link:** [https://shopify-analytics-app.vercel.app](https://shopify-analytics-app.vercel.app)
 
 ---
 
@@ -23,7 +23,7 @@ This application was developed to provide Shopify store owners with a simple, cl
 - **Secure Authentication:** User registration and login handled using Spring Security.
 - **Data Ingestion:** Fetches and stores key data points from Shopify, including Orders, Products, and Customers.
 - **On-Demand Sync:** Ability to trigger a data synchronization process for any connected store.
-- **Analytics API:** Provides aggregated data for KPIs, top customer lists, and time-series charts.
+- **Analytics API:** Provides aggregated data for KPIs (Key Performance Indicators), top customer lists, and time-series charts.
 
 ---
 
