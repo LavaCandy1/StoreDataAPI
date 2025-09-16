@@ -50,10 +50,11 @@ The application follows a standard layered architecture, as shown below. It sepa
 ---
 
 ### Adding a store
-To add a store (after login) one must have an Shopify Store with a Admin API access token with these scopes enabled - 
+To add a store (after login) one must have an Shopify Store with a Admin API access token with these scopes enabled: 
  - read_customers
  - read_orders
  - read_products
+
 [how to get an API access token](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
 
 ## Getting Started
